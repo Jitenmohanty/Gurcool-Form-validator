@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import useDebounce from '../hook/useDebounce';
 
 const AddressInfo = ({ formData, setFormData, prevStep, nextStep }) => {
   const [errors, setErrors] = useState({});
+  const debouncedFormData = useDebounce(formData, 500); // 500ms delay
 
-  //Form validator....
   const validate = () => {
     const newErrors = {};
     if (!formData.address1) newErrors.address1 = "Address Line 1 is required";
@@ -18,10 +19,9 @@ const AddressInfo = ({ formData, setFormData, prevStep, nextStep }) => {
     if (validate()) nextStep();
   };
 
-  //Set items on each button click we can definetly improve it by the help of debouncing...
   useEffect(() => {
-    localStorage.setItem('formData', JSON.stringify(formData));
-  }, [formData]);
+    localStorage.setItem('formData', JSON.stringify(debouncedFormData));
+  }, [debouncedFormData]);
 
   return (
     <div className='container'>
@@ -61,8 +61,8 @@ const AddressInfo = ({ formData, setFormData, prevStep, nextStep }) => {
       />
       {errors.zip && <p>{errors.zip}</p>}
       <div className='btn'>
-      <button onClick={prevStep}>Back</button>
-      <button onClick={handleNext}>Next</button>
+        <button onClick={prevStep}>Back</button>
+        <button onClick={handleNext}>Next</button>
       </div>
     </div>
   );

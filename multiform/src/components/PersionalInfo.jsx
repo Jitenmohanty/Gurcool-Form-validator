@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import useDebounce from '../hook/useDebounce';
 
 const PersonalInfo = ({ formData, setFormData, nextStep }) => {
   const [errors, setErrors] = useState({});
+  const debouncedFormData = useDebounce(formData, 500); // 500ms delay
+
 
   const validate = () => {
     const newErrors = {};
@@ -17,8 +20,8 @@ const PersonalInfo = ({ formData, setFormData, nextStep }) => {
   };
 
   useEffect(() => {
-    localStorage.setItem('formData', JSON.stringify(formData));
-  }, [formData]);
+    localStorage.setItem('formData', JSON.stringify(debouncedFormData));
+  }, [debouncedFormData]);
 
   return (
     <div className='container'>
